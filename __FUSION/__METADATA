@@ -1,0 +1,12 @@
+{
+  "ARGS": [
+    ".\\Item.dll"
+  ],
+  "DATA": [
+    {
+      "TYPEINFO": "Item.Item, Item, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "DATABASEPATH": ".\\ItemDatabasePath.json",
+      "TYPECATEGORYID": "ItemDatabaseIdentification"
+    }
+  ]
+}

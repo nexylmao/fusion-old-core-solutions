@@ -1,0 +1,51 @@
+﻿namespace PublicTestConsole
+{
+    // THREE EXAMPLE CLASSES
+    class Example1
+    {
+        int x;
+        public Example1(int value)
+        {
+            x = value;
+        }
+    }
+    class Example2
+    {
+        string x;
+        public Example2(string value)
+        {
+            x = value;
+        }
+    }
+    class Example3
+    {
+        ConsoleColor x;
+        public Example3(ConsoleColor value)
+        {
+            x = value;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Type> Types = new List<Type>() { typeof(Example1), typeof(Example2), typeof(Example3) };
+            List<string> Paths = new List<string>() { "example1path", "example2path", "example3path" };
+            List<string> IDS = new List<string>() { "exapmple1id", "example2id", "example3id" };
+
+            __METADATA.DEFINELIST(3);
+            
+            for(int i = 0; i < Types.Count(); i++)
+            {
+                __METADATA.IMPORT(Types[i], Paths[i], IDS[i]);
+            }
+
+            Console.WriteLine(__METADATA.ToString());
+
+            __METADATA.SAVE(args);
+            Console.WriteLine("Done :)");
+            Console.ReadKey();
+        }
+    }
+}

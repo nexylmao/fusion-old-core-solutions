@@ -1,0 +1,39 @@
+﻿namespace PublicTestConsole
+{
+    // THREE EXAMPLE CLASSES
+    class Example1
+    {
+        int x;
+        public Example1(int value)
+        {
+            x = value;
+        }
+    }
+    class Example2
+    {
+        string x;
+        public Example2(string value)
+        {
+            x = value;
+        }
+    }
+    class Example3
+    {
+        ConsoleColor x;
+        public Example3(ConsoleColor value)
+        {
+            x = value;
+        }
+    }
+    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            __METADATA.LOAD(args);
+            Console.WriteLine(__METADATA.ToString());
+            Console.WriteLine("Done :)");
+            Console.ReadKey();
+        }
+    }
+}

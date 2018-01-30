@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fusion", "Fusion\Fusion.csproj", "{0D493417-F97B-4064-BB5B-CF79C3D2CBDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicTestConsole", "PublicTestConsole\PublicTestConsole.csproj", "{3E9AC778-7C21-44B0-8C5C-B07779523C70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D493417-F97B-4064-BB5B-CF79C3D2CBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D493417-F97B-4064-BB5B-CF79C3D2CBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D493417-F97B-4064-BB5B-CF79C3D2CBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D493417-F97B-4064-BB5B-CF79C3D2CBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E9AC778-7C21-44B0-8C5C-B07779523C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E9AC778-7C21-44B0-8C5C-B07779523C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E9AC778-7C21-44B0-8C5C-B07779523C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E9AC778-7C21-44B0-8C5C-B07779523C70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BBF0A90-1E98-4C8D-A7B7-CCBD5F89BC5B}
+	EndGlobalSection
+EndGlobal
