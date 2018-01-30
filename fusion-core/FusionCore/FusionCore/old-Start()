@@ -1,0 +1,46 @@
+        public static void Start(string[] args)
+        {
+            UsingDatabase = DatabaseMode.LOCALFILES;
+            if (args.Count() < 1)
+            {
+                Path = DefaultPath;
+            }
+            else
+            {
+                Path = args.Last();
+                if(Path.Contains("mongodb"))
+                {
+                    UsingDatabase = DatabaseMode.MONGODB;
+                }
+            }
+            DLLList = new LinkedList<__DLL>();
+            foreach(__DLL x in DLLList)
+            {
+                foreach(Type y in x.Types)
+                {
+                    if(y.Name == "BehaviourScript")
+                    {
+                        dynamic z = Activator.CreateInstance(y);
+                        MethodInfo[] mi = y.GetMethods();
+                        foreach (MethodInfo w in mi)
+                        {
+                            switch (w.Name)
+                            {
+                                case "PreStart":
+                                    w.Invoke(z, null);
+                                    break;
+                                case "Start":
+                                    w.Invoke(z, null);
+                                    break;
+                                case "AfterStart":
+                                    w.Invoke(z, null);
+                                    break;
+                                case "End":
+                                    w.Invoke(z, null);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
