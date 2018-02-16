@@ -1,0 +1,8 @@
+BUFF TANKS - 
+ALL NUMS ROUND(x,0) - 
+ONLY ONE MSG PER ATTACK - 
+ADD MORE ITEMS - 
+PROLASCI, imena, ne brojevi (+ color) -
+IZBACITI RECI TAKMICAR -
+LEPŠI ISPIS TAKMICARA POSLE DEFINICIJE -
+FIX CRIT DMG ADD (where one player doesn't get plus dmg) -

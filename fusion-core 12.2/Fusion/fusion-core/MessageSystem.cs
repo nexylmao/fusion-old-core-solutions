@@ -2,18 +2,98 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Fusion.Core.Database;
 
-namespace Fusion.MessageSystem
+namespace Fusion.Core.Messaging
 {
-    public static class IntegratedMessageDatabases
+    public static class Integrated
     {
-        // GENERAL RULE FOR INTEGRATED ONES 0 - DEFAULT GOOD MESSAGE, 1 - DEFAULT BAD MESSAGE
-
-        public static Database<Message> AssemblyLoaderSender()
+        #region Core
+        public static MessageSender CoreSender()
         {
-            Database<Message> returning =
+            MessageSender x = new MessageSender("Core", MessageReceiver.ReceiverList);
+            x.Preload(CoreMessages());
+            return x;
         }
 
+        public static IEnumerable<Message> CoreMessages()
+        {
+            HashSet<Message> x = new HashSet<Message>();
+            x.Add(new Message(false, 103, "Critical app error!", "--sd"));
+            x.Add(new Message(true, 102, "App done executing!", "--sd"));
+            return x;
+        }
+        #endregion
+        #region Logger
+        public static MessageReceiver LogReceiver(Action<Message> receive, Action shutdown, Action hideconsole)
+        {
+            MessageReceiver MessageReceiver = new MessageReceiver("LocalLogger", receive);
+            MessageReceiver.AddCommand("--sd", shutdown);
+            MessageReceiver.AddCommand("--app-good", hideconsole);
+            return MessageReceiver;
+        }
+
+        public static MessageSender LogSender()
+        {
+            MessageSender x = new MessageSender("Logger", MessageReceiver.ReceiverList);
+            x.Preload(LogMessages());
+            return x;
+        }
+
+        public static IEnumerable<Message> LogMessages()
+        {
+            HashSet<Message> x = new HashSet<Message>();
+            x.Add(new Message(true, 901, "App running in debug mode!"));
+            x.Add(new Message(true, 902, "Log write message to console"));
+            x.Add(new Message(true, 101, "DefaultLogger is up!", "--app-good"));
+            x.Add(new Message(true, 102, "App done executing!", "--sd"));
+            x.Add(new Message(false, 303, "DLLManager doesn't have what to load!"));
+            return x;
+        }
+        #endregion
+        #region Database
+        public static MessageSender DatabaseSender(string name)
+        {
+            MessageSender x = new MessageSender(name, MessageReceiver.ReceiverList);
+            x.Preload(DatabaseMessages());
+            return x;
+        }
+        
+        public static IEnumerable<Message> DatabaseMessages()
+        {
+            HashSet<Message> x = new HashSet<Message>();
+            x.Add(new Message(true, 201, "Loaded the database successfully!"));
+            x.Add(new Message(false, 202, "Couldn't load the database!"));
+            x.Add(new Message(true, 203, "Saved the database successfully!"));
+            x.Add(new Message(false, 204, "Couldn't save the database!"));
+            x.Add(new Message(true, 205, "Deleted the database successfully!"));
+            x.Add(new Message(false, 206, "Couldn't delete the database! "));
+            return x;
+        }
+        #endregion
+        #region AssemblyLoader
+        public static MessageReceiver AssemblyLoaderReceiver()
+        {
+            return new MessageReceiver("AssemblyLoader");
+        }
+
+        public static MessageSender AssemblyLoaderSender()
+        {
+            MessageSender Sender = new MessageSender("DLLManager", new MessageReceiver[] { MessageReceiver.First });
+            Sender.Preload(AssemblyLoaderMessages());
+            return Sender;
+        }
+
+        public static IEnumerable<Message> AssemblyLoaderMessages()
+        {
+            HashSet<Message> x = new HashSet<Message>();
+            x.Add(new Message(false, 302, "DLLManager can't load DLL's!", "--sd"));
+            x.Add(new Message(true, 301, "DLLManager loaded DLL's!"));
+            x.Add(new Message(false, 303, "DLLManager doesn't have anything to load!"));
+            x.Add(new Message(false, 304, "Error occured with unloading the domain!"));
+            return x;
+        }
+        #endregion
     }
 
     public class Message : StorableObject
@@ -77,6 +157,10 @@ namespace Fusion.MessageSystem
         }
         #endregion
         #region Methods
+        public void AddExceptionMessage(Exception ex)
+        {
+            MessageContent += " " + ex.Message;
+        }
         public string ToJSON(Formatting formatting = Formatting.None)
         {
             return JsonConvert.SerializeObject(this, formatting);
@@ -137,9 +221,9 @@ namespace Fusion.MessageSystem
             {
                 Receivers = new HashSet<MessageReceiver>();
             }
+            Receivers.Add(this);
             this.Name = Name;
             Commands = new Dictionary<string, Action>();
-            Receivers.Add(this);
         }
         public MessageReceiver(string Name, Action<Message> ReceiveMethod)
         {
@@ -147,10 +231,10 @@ namespace Fusion.MessageSystem
             {
                 Receivers = new HashSet<MessageReceiver>();
             }
+            Receivers.Add(this);
             this.Name = Name;
             this.ReceiveMethod = ReceiveMethod;
             Commands = new Dictionary<string, Action>();
-            Receivers.Add(this);
         }
         #endregion
         #region Methods
@@ -196,7 +280,7 @@ namespace Fusion.MessageSystem
         static public LinkedList<MessageSender> Senders;
         #endregion
         #region Constructor
-        public MessageSender(string Name)
+        public MessageSender(string Name, MessageReceiver first)
         {
             this.Name = Name;
             Receivers = new HashSet<MessageReceiver>();
@@ -242,10 +326,11 @@ namespace Fusion.MessageSystem
             }
             return null;
         }
-        public void Preload(Message Message)
+        public Message Preload(Message Message)
         {
             Message.Sender = this;
-            PreloadedMessages.Add(Message);            
+            PreloadedMessages.Add(Message);
+            return Message;
         }
         public void Preload(IEnumerable<Message> Messages)
         {
@@ -299,11 +384,31 @@ namespace Fusion.MessageSystem
                 Receivers.Remove(Receivers.ElementAt(index));
             }
         }
+        public void SendTo(int code, MessageReceiver Receiver)
+        {
+            foreach(Message x in PreloadedMessages)
+            {
+                if(x.Code == code)
+                {
+                    SendTo(x, Receiver);
+                }
+            }
+        }
         public void SendTo(Message Message, MessageReceiver Receiver)
         {
             if(PreloadedMessages.Contains(Message) && Receivers.Contains(Receiver))
             {
                 Receiver.ReceiveMessage(Message);
+            }
+        }
+        public void SendToAll(int code)
+        {
+            foreach(Message x in PreloadedMessages)
+            {
+                if(x.Code == code)
+                {
+                    SendToAll(x);
+                }
             }
         }
         public void SendToAll(Message Message)

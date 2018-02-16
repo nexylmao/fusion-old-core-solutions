@@ -5,10 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.IO;
-using Fusion.MessageSystem;
+using Fusion.Core.Messaging;
 
-namespace Fusion.AssemblyLoading
+namespace Fusion.Core.AssemblyLoading
 {
+    public interface IScript
+    {
+        #region Methods
+        void Start();
+        void End();
+        #endregion
+    }
+
     public class DLLManager
     { 
         #region Fields
@@ -45,13 +53,16 @@ namespace Fusion.AssemblyLoading
             {
                 Path[i] = Paths.ElementAt(i);
             }
-            Receiver = new MessageReceiver("DLLManager");
-            Sender = new MessageSender("DLLManager", new MessageReceiver[] { MessageReceiver.First });
-            Sender.Preload(IntegratedMessageDatabases.AssemblyLoaderSender());
-            if (LoadNow)
+            Receiver = Integrated.AssemblyLoaderReceiver();
+            Sender = Integrated.AssemblyLoaderSender();
+            if(LoadNow)
             {
                 Load();
             }
+        }
+        ~DLLManager()
+        {
+            Unload();
         }
         #endregion
         #region Methods
@@ -65,17 +76,33 @@ namespace Fusion.AssemblyLoading
             {
                 Assembly = new LinkedList<Assembly>();
             }
-            foreach (string one in Path)
+            if(Path.Count() > 0)
             {
-                Assembly.AddLast(Domain.Load(System.Reflection.Assembly.LoadFile(Directory.GetCurrentDirectory() + one).FullName));
-                foreach(Type x in Assembly.Last.Value.ExportedTypes)
+                foreach (string one in Path)
                 {
-                    if(x.IsSubclassOf(typeof(IScript)))
+                    try
                     {
-                        IScript scriptClass = (IScript)Activator.CreateInstance(x);
-                        scriptClass.Start();
+                        Assembly.AddLast(Domain.Load(System.Reflection.Assembly.LoadFile(Directory.GetCurrentDirectory() + @"\" + one).FullName));
+                        foreach (Type x in Assembly.Last.Value.ExportedTypes)
+                        {
+                            if (x.IsSubclassOf(typeof(IScript)))
+                            {
+                                IScript scriptClass = (IScript)Activator.CreateInstance(x);
+                                scriptClass.Start();
+                            }
+                        }
+                        Sender.SendTo(Sender.PreloadedMessages.ElementAt(1), MessageReceiver.First);
+                    }
+                    catch (Exception ex)
+                    {
+                        Sender.PreloadedMessages.ElementAt(0).AddExceptionMessage(ex);
+                        Sender.SendTo(Sender.PreloadedMessages.ElementAt(0), MessageReceiver.First);
                     }
                 }
+            }
+            else
+            {
+                Sender.SendTo(Sender.PreloadedMessages.ElementAt(2), MessageReceiver.First);
             }
         }
         public void Unload()
@@ -90,7 +117,14 @@ namespace Fusion.AssemblyLoading
             }
             if (Domain != null)
             {
-                AppDomain.Unload(Domain);
+                try
+                {
+                    AppDomain.Unload(Domain);
+                }
+                catch
+                {
+                    Sender.SendToAll(304);
+                }
             }
         }
         #endregion
