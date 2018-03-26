@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblySerialization", "AssemblySerialization\AssemblySerialization.csproj", "{39620455-D61C-4E70-A2C0-8D763F359188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangingAssemblyVersion", "ChangingAssemblyVersion\ChangingAssemblyVersion.csproj", "{488C996C-054F-4ADF-B7D4-EB444DE7E882}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39620455-D61C-4E70-A2C0-8D763F359188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39620455-D61C-4E70-A2C0-8D763F359188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39620455-D61C-4E70-A2C0-8D763F359188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39620455-D61C-4E70-A2C0-8D763F359188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{488C996C-054F-4ADF-B7D4-EB444DE7E882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{488C996C-054F-4ADF-B7D4-EB444DE7E882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{488C996C-054F-4ADF-B7D4-EB444DE7E882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{488C996C-054F-4ADF-B7D4-EB444DE7E882}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D9FFC36-F0AD-43C8-94BE-1C5E9691A11B}
+	EndGlobalSection
+EndGlobal
